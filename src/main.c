@@ -6,6 +6,10 @@ extern const char _binary_build_so_raw_so_start;
 extern const char _binary_build_so_raw_so_end;
 
 int main(int argc, char **argv) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: qtextract [executable]\n");
+        return -1;
+    }
     int tmp_f;
     char tmp_name[] = "/tmp/qtextract-XXXXXX-lib.so";
     if ((tmp_f = mkstemps(tmp_name, 7)) == -1) {
@@ -25,7 +29,7 @@ int main(int argc, char **argv) {
     } while (w_num != 0);
     close(tmp_f);
     setenv("LD_PRELOAD", tmp_name, 1);
-    char *app_name = "/opt/zoom/zoom";
+    char *app_name = argv[1];
     execl(app_name, app_name, (char *) NULL);
     fprintf(stderr, "Failed to start application\n");
     return 0;
